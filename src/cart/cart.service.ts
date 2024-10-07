@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCartDto } from './dto/create-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -16,15 +16,46 @@ export class CartService {
     return this.prismaService.cart.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} cart`;
+  async findOne(id: number) {
+    const cartFound = await this.prismaService.cart.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!cartFound) {
+      throw new NotFoundException(`cart with id ${id} not found`);
+    }
+
+    return cartFound;
   }
 
-  update(id: number, updateCartDto: UpdateCartDto) {
-    return `This action updates a #${id} cart`;
+  async update(id: number, updateCartDto: UpdateCartDto) {
+    const updateCart = await this.prismaService.cart.update({
+      where: {
+        id: id,
+      },
+      data: updateCartDto,
+    });
+
+    if (!updateCart) {
+      throw new NotFoundException(`cart with id ${id} not found`);
+    }
+
+    return updateCart;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} cart`;
+  async remove(id: number) {
+    const deleteCart = await this.prismaService.cart.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!deleteCart) {
+      throw new NotFoundException(`cart with id ${id} not found`);
+    }
+
+    return deleteCart;
   }
 }
