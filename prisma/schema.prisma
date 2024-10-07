@@ -1,0 +1,21 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Cart {
+  id          Int      @id @default(autoincrement())
+  sender      String // Quien envía la carta
+  recipient   String // Quien recibe la carta
+  message     String? // Mensaje de la carta
+  drawingData String? // Datos del dibujo en formato JSON o similar
+  createdAt   DateTime @default(now()) // Fecha de creación
+  updatedAt   DateTime @updatedAt // Fecha de actualizacion
+}
