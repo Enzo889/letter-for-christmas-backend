@@ -17,6 +17,10 @@ export class CartService {
   }
 
   async findOne(id: number) {
+    if (!id || isNaN(id)) {
+      throw new NotFoundException(` `);
+    }
+
     const cartFound = await this.prismaService.cart.findUnique({
       where: {
         id: id,
